@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-cert-init
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-cert-init
+  template:
+    metadata:
+      labels:
+        app: k8s-cert-init
+    spec:
+      containers:
+      - name: k8s-cert-init
+        image: yidoughi/k8s-cert-init:latest
+        imagePullPolicy: Always
+        securityContext:
+          runAsUser: 1001
+          runAsGroup: 1001 
+        command: ["start.sh"]
+        envFrom:
+          - configMapRef:
+              name: k8s-cert-init-config
+          - secretRef:
+              name: k8s-cert-init-secrets
